@@ -6,8 +6,7 @@ import { generateToken } from "../utils/jwt";
 export const registerService = async (
     body: RegisterBody
 ) => {
-    console.log("registerService called with body:", body);
-    const { firstName, lastName, email, password } = body;
+    const { busniess_name, owner_name, email, password } = body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const already = await prisma.user.findUnique({
         where: { email },
@@ -17,8 +16,8 @@ export const registerService = async (
     }
     const user = await prisma.user.create({
         data: {
-            firstName,
-            lastName,
+            businessName: busniess_name,
+            ownerName: owner_name,
             email,
             password: hashedPassword,
         },
