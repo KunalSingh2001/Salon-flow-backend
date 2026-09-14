@@ -4,6 +4,7 @@ import { registerService, loginService } from "../services/auth.service";
 
 export const register: RequestHandler = async (req, res) => {
     try {
+        console.log("api hit", req.body)
         const body = registerSchema.parse(req.body);
         const user = await registerService(body);
         res.status(201);
