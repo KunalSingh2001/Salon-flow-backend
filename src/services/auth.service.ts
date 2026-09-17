@@ -2,6 +2,7 @@ import prisma from "../config/prisma";
 import bcrypt from "bcryptjs";
 import { RegisterBody, LoginBody } from "../validators/auth.validator";
 import { generateToken } from "../utils/jwt";
+import { AppError } from "../utils/AppError";
 
 export const registerService = async (
     body: RegisterBody
@@ -12,7 +13,12 @@ export const registerService = async (
         where: { email },
     });
     if (already) {
-        throw new Error("User already exists");
+
+        throw new AppError(
+            "An account with this email already exists",
+            409,
+            { email: "This email is already in use" }
+        );
     }
     const user = await prisma.user.create({
         data: {
@@ -31,11 +37,19 @@ export const loginService = async (body: LoginBody) => {
         where: { email },
     });
     if (!user) {
-        throw new Error("User not found");
+        throw new AppError(
+            "User not found",
+            404,
+            { email: "This email is not in use" }
+        );
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-        throw new Error("Invalid credentials");
+        throw new AppError(
+            "Invalid credentials",
+            401,
+            { password: "Invalid credentials" }
+        );
     }
     const token = await generateToken(user.id);
     return { user, token };

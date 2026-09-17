@@ -2,9 +2,8 @@ import { RequestHandler } from "express";
 import { registerSchema, loginSchema } from "../validators/auth.validator";
 import { registerService, loginService } from "../services/auth.service";
 
-export const register: RequestHandler = async (req, res) => {
+export const register: RequestHandler = async (req, res, next) => {
     try {
-        console.log("api hit", req.body)
         const body = registerSchema.parse(req.body);
         const user = await registerService(body);
         res.status(201);
@@ -13,11 +12,7 @@ export const register: RequestHandler = async (req, res) => {
             user,
         });
     } catch (error) {
-        if (error instanceof Error) {
-            return res.status(400).json({
-                msg: error.message,
-            });
-        }
+        next(error);
     }
 };
 
