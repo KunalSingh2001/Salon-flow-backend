@@ -27,8 +27,17 @@ export const registerService = async (
             email,
             password: hashedPassword,
         },
+        select: {
+            id: true,
+            businessName: true,
+            ownerName: true,
+            email: true,
+            role: true,
+            createdAt: true,
+        },
     });
-    return user;
+    const token = await generateToken(user.id);
+    return { user, token };
 };
 
 export const loginService = async (body: LoginBody) => {
