@@ -12,11 +12,19 @@ export const COOKIE_OPTIONS: CookieOptions = {
 };
 
 
+// const COOKIE_OPTIONS = {
+//     httpOnly: true,
+//     secure: process.env.NODE_ENV === "production",
+//     sameSite: (process.env.NODE_ENV === "production" ? "none" : "lax") as const,
+//     maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
+// };
+
+
 export const register: RequestHandler = async (req, res, next) => {
     try {
         const body = registerSchema.parse(req.body);
         const { user, token } = await registerService(body);
-        res.cookie("token", token, COOKIE_OPTIONS);
+        res.cookie("session_token", token, COOKIE_OPTIONS);
         res.status(201);
         res.json({
             msg: "User registered successfully",
