@@ -97,9 +97,8 @@ export const toggleEmployeeStatus: RequestHandler = async (req, res, next) => {
 
         res.status(200).json({
             success: true,
-            message: `Employee status updated to ${
-                employee.status === 1 ? "Active" : "Inactive"
-            }`,
+            message: `Employee status updated to ${employee.status === 1 ? "Active" : "Inactive"
+                }`,
             data: employee,
         });
     } catch (error) {

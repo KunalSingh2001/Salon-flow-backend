@@ -41,3 +41,29 @@ model Employee {
 
   @@map("employees")
 }
+
+model Appointment {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  appointmentNumber  String   @unique
+  userId             String?  @db.ObjectId
+  serviceId          String?  @db.ObjectId
+  staffId            String?  @db.ObjectId
+  customerName       String
+  email              String
+  phone              String
+  appointmentDate    DateTime
+  startTime          String
+  endTime            String
+  duration           Int
+  notes              String?
+  status             String   @default("PENDING")
+  paymentStatus      String   @default("PENDING")
+  amount             Float
+  paymentMethod      String?
+  cancellationReason String?
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@map("appointments")
+}

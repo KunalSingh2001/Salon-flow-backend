@@ -9,8 +9,13 @@ interface JwtPayload {
 
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        // 1. Read token from cookie (or fallback to Authorization header)
-        const token = req.cookies?.session_token || req.headers.authorization?.split(" ")[1];
+        // 1. Read token from cookie (supports both 'token' and 'session_token' or Authorization header)
+        const token =
+            req.cookies?.token ||
+            req.cookies?.session_token ||
+            (req.headers.authorization?.startsWith("Bearer ")
+                ? req.headers.authorization.split(" ")[1]
+                : undefined);
 
         if (!token) {
             throw new AppError("Unauthorized - No active session", 401);

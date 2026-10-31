@@ -9,11 +9,17 @@ exports.COOKIE_OPTIONS = {
     sameSite: "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
 };
+// const COOKIE_OPTIONS = {
+//     httpOnly: true,
+//     secure: process.env.NODE_ENV === "production",
+//     sameSite: (process.env.NODE_ENV === "production" ? "none" : "lax") as const,
+//     maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
+// };
 const register = async (req, res, next) => {
     try {
         const body = auth_validator_1.registerSchema.parse(req.body);
         const { user, token } = await (0, auth_service_1.registerService)(body);
-        res.cookie("token", token, exports.COOKIE_OPTIONS);
+        res.cookie("session_token", token, exports.COOKIE_OPTIONS);
         res.status(201);
         res.json({
             msg: "User registered successfully",
